@@ -1,4 +1,13 @@
 class UsersController < ApplicationController
+  before_action :json_auth, only: :index
+
+  def index
+    #caches posts
+    users = User.includes(:posts)
+    # packages posts into a users json object, excluding certain attributes
+    render json: users.as_json(include: :posts, except: [:password_digest, :updated_at])
+  end
+
   def new
     @user = User.new
     render :new
